@@ -1,88 +1,61 @@
 # Lab CRUD API
 
-## Project Overview
+## Setup
 
-This project is a simple RESTful API for managing students and courses in a laboratory setting. It is built with Node.js, Express, and MySQL. The API allows you to create, read, update, and delete (CRUD) students and courses.
-
----
-
-## Setup Steps
-
-1. **Clone the repository**
-   ```sh
-   git clone <your-repo-url>
-   cd lab_crud_api
-   ```
-
-2. **Install dependencies**
+1. Install dependencies:
    ```sh
    npm install
    ```
 
-3. **Configure the database**
-   - Create a MySQL database (default: `lab_crud_3isc`).
-   - Create the required tables:
-     ```sql
-     CREATE TABLE `courses` (
-       `id` int(11) NOT NULL AUTO_INCREMENT,
-       `code` varchar(20) NOT NULL,
-       `title` varchar(255) NOT NULL,
-       `units` int(11) DEFAULT NULL,
-       `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-       PRIMARY KEY (`id`),
-       UNIQUE KEY `code` (`code`)
-     );
-
-     CREATE TABLE `students` (
-       `id` int(11) NOT NULL AUTO_INCREMENT,
-       `name` varchar(255) NOT NULL,
-       `email` varchar(255) NOT NULL,
-       `course` varchar(255) DEFAULT NULL,
-       `year_level` int(11) DEFAULT NULL,
-       PRIMARY KEY (`id`),
-       UNIQUE KEY `email` (`email`)
-     );
-     ```
-   - Update `.env` with your database credentials if needed.
-
-4. **Start the server**
-   ```sh
-   npm run dev
+2. Create a `.env` file:
+   ```env
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=yourpassword
+   DB_NAME=lab_crud_3isc
+   PORT=3000
    ```
-   or
+
+3. Initialize MySQL database:
+   ```sql
+   CREATE DATABASE lab_crud_3isc;
+   CREATE TABLE courses (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     code VARCHAR(20) UNIQUE NOT NULL,
+     title VARCHAR(255) NOT NULL,
+     units INT,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   CREATE TABLE students (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(255) NOT NULL,
+     email VARCHAR(255) UNIQUE NOT NULL,
+     course VARCHAR(255),
+     year_level INT
+   );
+   ```
+
+4. Run the server:
    ```sh
+   npm run dev   # with nodemon
+   # or
    npm start
    ```
 
----
-
-## How to Run
-
-- The server will run on `http://localhost:3000` by default.
-- Use tools like [Postman](https://www.postman.com/) or [curl](https://curl.se/) to interact with the API.
-
----
+Server runs at: [http://localhost:3000](http://localhost:3000)
 
 ## API Endpoints
 
-### Health Check
+**Health**
+- `GET /api/health`
 
-- `GET /api/health`  
-  Returns API and DB status.
-
----
-
-### Students
-
-- `GET /api/students`  
-  Get all students.
-
-- `GET /api/students/:id`  
-  Get a student by ID.
-
-- `POST /api/students`  
-  Create a new student.  
-  **Body:**  
+**Students**
+- `GET /api/students`
+- `GET /api/students/:id`
+- `POST /api/students`
+- `PUT /api/students/:id`
+- `DELETE /api/students/:id`  
+  Example body:
   ```json
   {
     "name": "John Doe",
@@ -92,33 +65,13 @@ This project is a simple RESTful API for managing students and courses in a labo
   }
   ```
 
-- `PUT /api/students/:id`  
-  Update a student by ID.  
-  **Body:**  
-  ```json
-  {
-    "name": "Jane Doe",
-    "course": "BSIT",
-    "year_level": 4
-  }
-  ```
-
-- `DELETE /api/students/:id`  
-  Delete a student by ID.
-
----
-
-### Courses
-
-- `GET /api/courses`  
-  Get all courses.
-
-- `GET /api/courses/:id`  
-  Get a course by ID.
-
-- `POST /api/courses`  
-  Create a new course.  
-  **Body:**  
+**Courses**
+- `GET /api/courses`
+- `GET /api/courses/:id`
+- `POST /api/courses`
+- `PUT /api/courses/:id`
+- `DELETE /api/courses/:id`  
+  Example body:
   ```json
   {
     "code": "CS101",
@@ -126,27 +79,3 @@ This project is a simple RESTful API for managing students and courses in a labo
     "units": 3
   }
   ```
-
-- `PUT /api/courses/:id`  
-  Update a course by ID.  
-  **Body:**  
-  ```json
-  {
-    "code": "CS102",
-    "title": "Data Structures",
-    "units": 4
-  }
-  ```
-
-- `DELETE /api/courses/:id`  
-  Delete a course by ID.
-
----
-
-## Notes
-
-- All endpoints return JSON responses.
-- Make sure your MySQL server is running and accessible.
-- For development, use `npm run dev` for auto-reloading with nodemon.
-
----
